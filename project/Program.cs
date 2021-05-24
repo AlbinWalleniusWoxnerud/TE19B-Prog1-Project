@@ -7,16 +7,20 @@ namespace project
     {
         static void Main()
         {
+            //Introduction
             Introduction();
 
             while (GameLogic.play)
             {
                 //Create a menu with the specified header and alternatives
                 int input = Menu(header: "Menu:", alternatives: "Play game. Settings. End".Split(". "));
+
                 // Depending on input give different results
                 switch (input)
                 {
+                    //Play game
                     case 1:
+                        //While gamelogic
                         while (IsPlayAgain())
                         {
                             //If the player opted to skip dialog skip it
