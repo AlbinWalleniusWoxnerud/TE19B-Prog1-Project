@@ -4,12 +4,12 @@ namespace project
 {
     public class GameLogic
     {
-        static public int loopNumber = 0;
         static public int delay = 30;
         static public string textColor = "Magenta";
         static public int currentRoom = 1;
         static public bool conquered = false;
         static public bool play = true;
+        static public bool playAgain = true;
     }
 
     public class Room

@@ -13,7 +13,7 @@ namespace project
             while (GameLogic.play)
             {
                 //Create a menu with the specified header and alternatives
-                int input = Menu(header: "Menu:", alternatives: "Play game. Settings. End".Split(". "));
+                int input = Menu(header: "Main menu:", alternatives: "Play game. Settings. End".Split(". "));
 
                 // Depending on input give different results
                 switch (input)
@@ -21,27 +21,31 @@ namespace project
                     //Play game
                     case 1:
                         //While gamelogic
-                        while (IsPlayAgain())
+                        while (GameLogic.playAgain)
                         {
-                            //If the player opted to skip dialog skip it
+                            //Intro dialog
+                            Greetings();
+                            Quest();
+                            EnterMaze();
 
-                            {
-                                Greetings();
-                                Quest();
-                                EnterMaze();
-                            }
+                            //While the game isn't over
                             while (!IsGameOver())
                             {
+                                //Go to the room indicated by Gamelogic
                                 CurrentRoom(GameLogic.currentRoom);
                                 if (IsGameOver()) break;
                             }
+
+                            //Play again yes/no
                             IsPlayAgain();
                         }
                         break;
                     case 2:
+                        //Change settings of game
                         Settings();
                         break;
                     case 3:
+                        //End program
                         System.Environment.Exit(0);
                         break;
                 }
@@ -51,6 +55,7 @@ namespace project
         //A method that slows down the typing speed of the console
         public static void SlowRPG_Write(string input, bool sameLine = false, string color = "Magenta", int delay = 30)
         {
+            //If player changed settings change them here, because otherwise it will cause a compile time error
             if (delay == 30) delay = GameLogic.delay;
             if (color == "Magenta") color = GameLogic.textColor;
 
@@ -83,11 +88,13 @@ namespace project
             return;
         }
 
+        //Settings, change the settings of the game
         static void Settings()
         {
             int userInput = Menu(header: "Settings: ", alternatives: "Remove slow text. Change default text color".Split(". "));
             switch (userInput)
             {
+                //Slow text setting
                 case 1:
                     int userInput2 = Menu(header: "Remove slow text: ", alternatives: "Yes.. No.. Restore default.".Split(". "));
                     switch (userInput2)
@@ -103,12 +110,13 @@ namespace project
                     }
                     break;
 
+                //Text color setting
                 case 2:
                     int userInput3 = Menu(header: "Change default text color: ", alternatives: "Yes.. No.. Restore default.".Split(". "));
                     switch (userInput3)
                     {
                         case 1:
-                            ChangeColor();
+                            ChangeTextColor();
                             break;
                         case 2:
                             break;
@@ -120,14 +128,17 @@ namespace project
             }
         }
 
-        static void ChangeColor()
+        //Change text color
+        static void ChangeTextColor()
         {
+            //Array of all possibilities
             string[] allPossibleConsoleColors = { "Black", "Blue", "Cyan", "DarkBlue", "DarkCyan", "DarkGray", "DarkGreen", "DarkMagenta", "DarkRed", "DarkYellow", "Gray", "Green", "Magenta", "Red", "White", "Yellow" };
-            SlowRPG_Write("Changing the text color might make text unreadable and or indistinguishable from the background.");
+            SlowRPG_Write("Warning! Changing the text color might make text unreadable and or indistinguishable from the background.", color: "Red");
             int userInput = Menu(header: "Proceed?", alternatives: "Yes.. No".Split(". "));
 
             if (userInput == 2) return;
 
+            //Choose between all possibilities
             int userInput2 = Menu(header: "Choose a color", alternatives: allPossibleConsoleColors);
             GameLogic.textColor = allPossibleConsoleColors[userInput2 - 1];
             SlowRPG_Write($"You choose {allPossibleConsoleColors[userInput2 - 1]}");
@@ -167,6 +178,7 @@ namespace project
 
         public static void EnterMaze()
         {
+            //Dialog essentially
             SlowRPG_Write("As you enter the maze you slip and fall, blacking out as a result...");
             SlowRPG_Write("...", delay: 1000);
             SlowRPG_Write("...", delay: 1000);
@@ -180,6 +192,7 @@ namespace project
             SlowRPG_Write(" your torch you are able to make out faint details of the room.");
         }
 
+        //A method that creates a menu with alternatives
         public static int Menu(string header, string[] alternatives)
         {
             //Prints out the menu with alternatives
@@ -195,7 +208,7 @@ namespace project
             return (int)userInput;
         }
 
-        //Method to get an integer in a certain span/range
+        //Method to get an integer in a certain range, also check or 'quit'
         public static int? GetInCorrectRange(int lowerRange, int upperRange)
         {
             //Init vars
@@ -240,42 +253,38 @@ namespace project
             return userInput;
         }
 
-        public static bool IsPlayAgain()
+        //Check if the player want to play another game
+        public static void IsPlayAgain()
         {
-            if (GameLogic.loopNumber == 0)
-            {
-                GameLogic.loopNumber++;
-                return true;
-            }
             SlowRPG_Write("Would you like to play again?");
             int input = Menu("Menu:", "Play again.. End game.".Split(". "));
             switch (input)
             {
                 case 1:
-                    return true;
+                    break;
                 case 2:
-                    return false;
-
-                default: return false;
+                    GameLogic.playAgain = false;
+                    break;
             }
 
         }
 
+        //Self explanatory
         public static bool IsGameOver()
         {
             //The game is over if the player is dead or if the maze is conquered
             if (StaticPlayer.player.alive == false)
             {
-                GameLogic.currentRoom = 0;
+                GameLogic.currentRoom = 1;
                 return true;
             }
             if (GameLogic.conquered == true) return true;
             return false;
         }
 
+        //Everytime the player does something stupid increase stupidity and display that their stupidity increased, if stupidity reaches 10 the player dies, currently only works for room 1
         public static bool Stupidity()
         {
-            //Everytime the player does something stupid increase stupidity and display that their stupidity increased, if stupidity reaches 10 the player dies
             if (StaticPlayer.player.stupidity > 9)
             {
                 SlowRPG_Write("");
@@ -297,6 +306,7 @@ namespace project
             return false;
         }
 
+        //The method for when the player attacks
         public static void PlayerAttack(int enemyHealth, int enemyShield, double enemyDefense, out int enemy_remaining_shield, out int enemy_remaining_health)
         {
             double damage = StaticPlayer.player.attack;
@@ -364,6 +374,7 @@ namespace project
 
             SlowRPG_Write("");
 
+            //return the new shield and health of the enemy
             enemy_remaining_health = enemyHealth;
             enemy_remaining_shield = enemyShield;
         }
