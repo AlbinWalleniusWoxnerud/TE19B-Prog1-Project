@@ -5,6 +5,7 @@ namespace project
 {
     class Room1Methods : Program
     {
+        //Simply dialog
         public static void Room1_Dialog1()
         {
             SlowRPG_Write("You can see something in the ", sameLine: true);
@@ -125,6 +126,7 @@ namespace project
 
                 switch (room1_playerChoice2)
                 {
+                    //Depending on player choice get different stats
                     case 1:
                         StaticPlayer.player.attack = 10;
                         StaticPlayer.player.shield = 125;
@@ -142,10 +144,11 @@ namespace project
                         SlowRPG_Write("You choose to keep both swords and discard the shield.");
                         break;
                 }
+                //Cleared section 1 of room 1 so flag that part as finished
                 StaticRoom.room1.clear1 = true;
             }
 
-            //If portion 2 of room 1 hasnt not been cleared
+            //If portion 2 of room 1 hasn't not been cleared
             if (!StaticRoom.room1.clear2)
             {
                 SlowRPG_Write("");
@@ -153,12 +156,12 @@ namespace project
 
                 if (room1_playerChoice3 == 2)
                 {
+                    //Change the current room to the one that the player is going to so that the initroom() method goes to that room
                     GameLogic.currentRoom = 2;
                     StaticRoom.room1.specialInteraction = true;
                     return;
                 }
 
-                //If the player opted to skip dialog skip it
                 Room1_Dialog3();
 
                 StaticRoom.room1.clear2 = true;
@@ -167,7 +170,6 @@ namespace project
             //If the player has the true key which one gets from defeating the Dragonling and if the player has cleared portion 2 of room 1
             if (StaticPlayer.player.hasTrueKey && StaticRoom.room1.clear2)
             {
-                //If the player opted to skip dialog skip it
                 Room1_Dialog4();
 
                 bool didNotUseKey = true;

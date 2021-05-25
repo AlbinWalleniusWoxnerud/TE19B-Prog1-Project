@@ -2,8 +2,10 @@ using System;
 
 namespace project
 {
+    //Fundamental game logic of the game
     public class GameLogic
     {
+        //Reset game logic
         public static void Reset()
         {
             currentRoom = 1;
@@ -19,6 +21,7 @@ namespace project
         static public bool playAgain = true;
     }
 
+    //Room logic, or rather room eventflags 
     public class Room
     {
         public bool clear1;
@@ -26,6 +29,7 @@ namespace project
         public bool clear3;
         public bool specialInteraction;
 
+        //Initialize rooms with all flags disabled
         public Room(bool _clear1 = false, bool _clear2 = false, bool _clear3 = false, bool _specialInteraction = false)
         {
             clear1 = _clear1;
@@ -35,8 +39,10 @@ namespace project
         }
     }
 
+    //Create a static instance of the rooms that can be globally accessed
     public class StaticRoom
     {
+        //Reset all room flags
         public static void Reset()
         {
             for (int i = 0; i < 9; i++)
@@ -63,6 +69,7 @@ namespace project
         public static Room room9 = new Room();
     }
 
+    //Fundamental stats for entities
     public class Base
     {
         public int health;
@@ -74,6 +81,7 @@ namespace project
 
     }
 
+    //Player stats and flags
     public class Player : Base
     {
         public int maxhealth;
@@ -86,6 +94,7 @@ namespace project
         public bool hasBossKey = false;
         public bool hasTrueKey = false;
 
+        //Player initialization with default values
         public Player(int _health = 100, int _maxhealth = 100, int _shield = 0, int _attack = 1, double _defense = 1, int _crit = 10)
         {
             health = _health;
@@ -97,7 +106,7 @@ namespace project
         }
 
     }
-
+    //Create a static instance of the player that can be globally accessed
     public class StaticPlayer
     {
         public static void Reset()
@@ -106,8 +115,11 @@ namespace project
         }
         public static Player player = new Player();
     }
+
+    //Create a static instance of the enemies that can be globally accessed
     public class StaticEnemies
     {
+        //Reset enemies
         public static void Reset()
         {
             goblin1 = new Goblin(20, 10, 5, 0.95, 5);
@@ -123,6 +135,7 @@ namespace project
         public static Dragonling Smedd = new Dragonling();
     }
 
+    //Enemies, inherit stats from base class, every enemy has different default initialization stats
     public class Goblin : Base
     {
         public Goblin(int _health = 25, int _shield = 50, int _attack = 10, double _defense = 0.8, int _crit = 20)

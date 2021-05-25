@@ -7,13 +7,16 @@ namespace project
     {
         static void Main()
         {
+            //UTF-8
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
             //Introduction
             Introduction();
 
             while (GameLogic.play)
             {
                 //Create a menu with the specified header and alternatives
-                int input = Menu(header: "Main menu:", alternatives: "Play game. Settings. End".Split(". "));
+                int input = Menu(header: "Main menu:", alternatives: "Play game. Settings. End program".Split(". "));
 
                 // Depending on input give different results
                 switch (input)
@@ -32,7 +35,7 @@ namespace project
                             while (!IsGameOver())
                             {
                                 //Go to the room indicated by Gamelogic
-                                CurrentRoom(GameLogic.currentRoom);
+                                InitRoom(GameLogic.currentRoom);
                                 if (IsGameOver()) break;
                             }
 
@@ -56,7 +59,9 @@ namespace project
         public static void SlowRPG_Write(string input, bool sameLine = false, string color = "Magenta", int delay = 30)
         {
             //If player changed settings change them here, because otherwise it will cause a compile time error
-            if (delay == 30) delay = GameLogic.delay;
+            delay = GameLogic.delay;
+
+            //This atleast tries to make sure that highlighted text is still highlighted
             if (color == "Magenta") color = GameLogic.textColor;
 
             //Split the given input string into a char array
@@ -91,7 +96,8 @@ namespace project
         //Settings, change the settings of the game
         static void Settings()
         {
-            int userInput = Menu(header: "Settings: ", alternatives: "Remove slow text. Change default text color".Split(". "));
+        start:
+            int userInput = Menu(header: "Settings: ", alternatives: "Remove slow text. Change default text color. Return to main menu".Split(". "));
             switch (userInput)
             {
                 //Slow text setting
@@ -103,7 +109,7 @@ namespace project
                             GameLogic.delay = 0;
                             break;
                         case 2:
-                            break;
+                            goto start;
                         case 3:
                             GameLogic.delay = 30;
                             break;
@@ -119,11 +125,15 @@ namespace project
                             ChangeTextColor();
                             break;
                         case 2:
-                            break;
+                            goto start;
                         case 3:
                             GameLogic.textColor = "Magenta";
                             break;
                     }
+                    break;
+
+                //Return to main menu
+                case 3:
                     break;
             }
         }
@@ -505,7 +515,7 @@ namespace project
             return false;
         }
 
-        public static void CurrentRoom(int currentRoom)
+        public static void InitRoom(int currentRoom)
         {
             //Really just a switch made into a method to make the code less cluttered
             //Based on current room get that room

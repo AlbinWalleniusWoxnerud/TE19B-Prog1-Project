@@ -34,8 +34,7 @@ namespace project
             SlowRPG_Write("...", delay: 200);
             SlowRPG_Write("...", delay: 200);
             SlowRPG_Write("...", delay: 200);
-            SlowRPG_Write("");
-            SlowRPG_Write("(￣ω￣;)");
+            SlowRPG_Write("(ﾉಥ益ಥ)ﾉ");
             SlowRPG_Write("You decide to check the paths out.");
         }
 
