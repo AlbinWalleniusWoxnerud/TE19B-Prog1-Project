@@ -127,8 +127,8 @@ namespace project
                 {
                     case 1:
                         StaticPlayer.player.attack = 10;
-                        StaticPlayer.player.shield = 100;
-                        StaticPlayer.player.defense = 0.9;
+                        StaticPlayer.player.shield = 125;
+                        StaticPlayer.player.defense = 0.8;
                         StaticPlayer.player.crit = 10;
                         StaticPlayer.player.chooseShield = true;
                         SlowRPG_Write("");

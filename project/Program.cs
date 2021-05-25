@@ -261,6 +261,10 @@ namespace project
             switch (input)
             {
                 case 1:
+                    StaticPlayer.Reset();
+                    StaticEnemies.Reset();
+                    GameLogic.Reset();
+                    StaticRoom.Reset();
                     break;
                 case 2:
                     GameLogic.playAgain = false;
@@ -273,7 +277,7 @@ namespace project
         public static bool IsGameOver()
         {
             //The game is over if the player is dead or if the maze is conquered
-            if (StaticPlayer.player.alive == false)
+            if (StaticPlayer.player.alive == false || StaticPlayer.player.health <= 0)
             {
                 GameLogic.currentRoom = 1;
                 return true;
@@ -399,42 +403,53 @@ namespace project
                 enemyDamage *= 2;
             }
 
-            if ((shield - enemyDamage) >= 0)
+            if (isPlayerDefending)
             {
-                //Cast damage to int 
-                shield = shield - (int)enemyDamage;
+                if ((shield - enemyDamage) >= 0)
+                {
+                    //Cast damage to int 
+                    shield = shield - (int)enemyDamage;
 
-                SlowRPG_Write($"{(int)enemyDamage}", sameLine: true, color: "White");
-                SlowRPG_Write(" damage blocked by your shield.");
-                SlowRPG_Write("You have ", sameLine: true);
-                SlowRPG_Write($"{shield}", sameLine: true, color: "White");
-                SlowRPG_Write(" remaining shield.");
+                    SlowRPG_Write($"{(int)enemyDamage}", sameLine: true, color: "White");
+                    SlowRPG_Write(" damage blocked by your shield.");
+                    SlowRPG_Write("You have ", sameLine: true);
+                    SlowRPG_Write($"{shield}", sameLine: true, color: "White");
+                    SlowRPG_Write(" remaining shield.");
+                }
+
+                //If the attack destoys the shield
+                else if ((shield - enemyDamage) < 0 && shield > 0)
+                {
+                    SlowRPG_Write($"{enemyDamage - shield}", sameLine: true, color: "White");
+                    SlowRPG_Write(" damage blocked by your shield.");
+
+                    //Remaining damage after shield blocked some of it
+                    enemyDamage = enemyDamage - shield;
+
+                    //Enemy shield is destoyed since (enemyShield - damage) was less than 0
+                    shield = 0;
+                    SlowRPG_Write("Your shield was destroyed.", color: "White");
+                    SlowRPG_Write($"{(int)enemyDamage}", sameLine: true, color: "White");
+                    SlowRPG_Write(" was dealt directly to your HP.");
+
+                    //Down cast double damage to int
+                    health = health - (int)enemyDamage;
+
+                    SlowRPG_Write("You have ", sameLine: true);
+                    SlowRPG_Write($"{health}", sameLine: true, color: "White");
+                    SlowRPG_Write(" HP remaining.");
+                }
+                else
+                {
+                    SlowRPG_Write($"{(int)enemyDamage}", sameLine: true, color: "White");
+                    SlowRPG_Write(" was dealt directly to your HP.");
+                    health = health - (int)enemyDamage;
+                    SlowRPG_Write("You have ", sameLine: true);
+                    SlowRPG_Write($"{health}", sameLine: true, color: "White");
+                    SlowRPG_Write(" HP remaining.");
+                }
             }
-
-            //If the attack destoys the shield
-            else if ((shield - enemyDamage) < 0 && shield > 0)
-            {
-                SlowRPG_Write($"{enemyDamage - shield}", sameLine: true, color: "White");
-                SlowRPG_Write(" damage blocked by your shield.");
-
-                //Remaining damage after shield blocked some of it
-                enemyDamage = enemyDamage - shield;
-
-                //Enemy shield is destoyed since (enemyShield - damage) was less than 0
-                shield = 0;
-                SlowRPG_Write("Your shield was destroyed.", color: "White");
-                SlowRPG_Write($"{(int)enemyDamage}", sameLine: true, color: "White");
-                SlowRPG_Write(" was dealt directly to your HP.");
-
-                //Down cast double damage to int
-                health = health - (int)enemyDamage;
-
-                SlowRPG_Write("You have ", sameLine: true);
-                SlowRPG_Write($"{health}", sameLine: true, color: "White");
-                SlowRPG_Write(" HP remaining.");
-            }
-
-            //Enemies shield is destroyed so deal damage directly to enemy hp
+            //shield is destroyed so deal damage directly to hp
             else
             {
                 SlowRPG_Write($"{(int)enemyDamage}", sameLine: true, color: "White");

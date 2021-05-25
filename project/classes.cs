@@ -4,6 +4,13 @@ namespace project
 {
     public class GameLogic
     {
+        public static void Reset()
+        {
+            currentRoom = 1;
+            conquered = false;
+            play = true;
+            playAgain = true;
+        }
         static public int delay = 30;
         static public string textColor = "Magenta";
         static public int currentRoom = 1;
@@ -30,6 +37,21 @@ namespace project
 
     public class StaticRoom
     {
+        public static void Reset()
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                room1 = new Room();
+                room2 = new Room();
+                room3 = new Room();
+                room4 = new Room();
+                room5 = new Room();
+                room6 = new Room();
+                room7 = new Room();
+                room8 = new Room();
+                room9 = new Room();
+            }
+        }
         public static Room room1 = new Room();
         public static Room room2 = new Room();
         public static Room room3 = new Room();
@@ -78,10 +100,22 @@ namespace project
 
     public class StaticPlayer
     {
+        public static void Reset()
+        {
+            player = new Player();
+        }
         public static Player player = new Player();
     }
     public class StaticEnemies
     {
+        public static void Reset()
+        {
+            goblin1 = new Goblin(20, 10, 5, 0.95, 5);
+            goblin2 = new Goblin();
+            hobgoblin = new HobGoblin();
+            wolf = new Wolf();
+            Smedd = new Dragonling();
+        }
         public static Goblin goblin1 = new Goblin(20, 10, 5, 0.95, 5);
         public static Goblin goblin2 = new Goblin();
         public static HobGoblin hobgoblin = new HobGoblin();

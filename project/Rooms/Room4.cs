@@ -110,6 +110,7 @@ namespace project
                             SlowRPG_Write("Unfortunately at the cost of your hand.");
                             SlowRPG_Write("-20 HP", color: "White");
                             StaticPlayer.player.health -= 20;
+                            if (IsGameOver()) return;
                             SlowRPG_Write("You have ", sameLine: true);
                             SlowRPG_Write($"{StaticPlayer.player.health}", sameLine: true, color: "White");
                             SlowRPG_Write(" HP remaining.");

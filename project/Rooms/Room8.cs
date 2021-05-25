@@ -75,43 +75,44 @@ namespace project
                 //Usual dialog with skip
                 Room8_Dialog1();
 
-                int room8_playerChoice1 = Menu(header: "Do you: ", alternatives: "Praise it.. Retreat to room 7, Hobgoblin room.".Split(". "));
+                int room8_playerChoice1 = Menu(header: "Do you: ", alternatives: "Praise it.. Don' praise it.".Split(". "));
 
                 //If player choose so return to room 7
                 if (room8_playerChoice1 == 2)
                 {
                     SlowRPG_Write("");
-                    SlowRPG_Write("You choose to retreat.");
-                    StaticRoom.room8.specialInteraction = true;
-                    GameLogic.currentRoom = 7;
-                    return;
+                    SlowRPG_Write("You choose not to praise it.");
+                    StaticRoom.room8.clear1 = true;
                 }
 
-                //If missing HP is greater than 10 or equal to 10 simply add 10 onto current HP
-                if ((StaticPlayer.player.maxhealth - StaticPlayer.player.health) >= 10)
+                if (!StaticRoom.room8.clear1)
                 {
-                    StaticPlayer.player.health = StaticPlayer.player.health + 10;
+                    //If missing HP is greater than 10 or equal to 10 simply add 10 onto current HP
+                    if ((StaticPlayer.player.maxhealth - StaticPlayer.player.health) >= 10)
+                    {
+                        StaticPlayer.player.health = StaticPlayer.player.health + 10;
+                    }
+
+                    //If missing HP is less than 10 the player will heal all the missing health but nothing more, the 'else if' can be changed to simply else but the readability would be harmed
+                    else if ((StaticPlayer.player.maxhealth - StaticPlayer.player.health) < 10)
+                    {
+                        StaticPlayer.player.health = StaticPlayer.player.health + (StaticPlayer.player.maxhealth - StaticPlayer.player.health);
+                    }
+
+                    //Un-skippable dialog due to change in player status
+                    Room8_Dialog2();
+
+                    //Player gets +10 attack
+                    StaticPlayer.player.attack += 10;
+
+                    //Un-skippable dialog due to change in player status, dialog happens after the increase in attack so it displays the right values 
+                    Room8_Dialog3();
+
+                    StaticPlayer.player.subjectOfLordBacon = true;
+                    Room8_Dialog4();
+
+                    StaticRoom.room8.clear1 = true;
                 }
-
-                //If missing HP is less than 10 the player will heal all the missing health but nothing more, the 'else if' can be changed to simply else but the readability would be harmed
-                else if ((StaticPlayer.player.maxhealth - StaticPlayer.player.health) < 10)
-                {
-                    StaticPlayer.player.health = StaticPlayer.player.health + (StaticPlayer.player.maxhealth - StaticPlayer.player.health);
-                }
-
-                //Un-skippable dialog due to change in player status
-                Room8_Dialog2();
-
-                //Player gets +10 attack
-                StaticPlayer.player.attack += 10;
-
-                //Un-skippable dialog due to change in player status, dialog happens after the increase in attack so it displays the right values 
-                Room8_Dialog3();
-
-                StaticPlayer.player.subjectOfLordBacon = true;
-                Room8_Dialog4();
-
-                StaticRoom.room8.clear1 = true;
             }
 
             if (StaticRoom.room8.clear1 && !StaticRoom.room8.clear2)
